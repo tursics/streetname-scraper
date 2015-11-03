@@ -37,7 +37,12 @@
 
 	function getStreetlistFromWikipedia( $pagedata)
 	{
-		$data = substr( $pagedata, strpos( $pagedata, '== Übersicht der Straßen und Plätze =='));
+		$pos = strpos( $pagedata, '== Übersicht der Straßen und Plätze ==');
+		if( false === $pos) {
+			$pos = strpos( $pagedata, '== Übersicht der Straßen ==');
+			$pos = strpos( $pagedata, '== Übersicht der Straßen ==');
+		}
+		$data = substr( $pagedata, $pos);
 		$data = substr( $data, strpos( $data, '==') + 2);
 		$data = substr( $data, strpos( $data, '==') + 2);
 		$data = substr( $data, 0, strpos( $data, '=='));
@@ -59,6 +64,7 @@
 
 		for( $i = 0; $i < count( $cols); ++$i) {
 			$cell = trim( $cols[ $i]);
+			$cell_ = preg_replace( '/\s+/', '', $cell);
 			$curlyOpen = substr_count( $cell, '{');
 			$curlyClose = substr_count( $cell, '}');
 			$squareOpen = substr_count( $cell, '[');
@@ -77,14 +83,14 @@
 					continue;
 				}
 			}
-			if(( 'align=left' == $cell) || ('align=center' == $cell) || ('align=right' == $cell)) {
+			if(( 'align=left' == $cell_) || ('align=center' == $cell_) || ('align=right' == $cell_) || ('align="right"' == $cell_)) {
 				unset( $cols[$i]);
 				$cols = array_values( $cols);
 				--$i;
 
 				continue;
 			}
-			if(( 0 === strpos( $cell, "id='")) || (0 === strpos( $cell, 'id="'))) {
+			if(( 0 === strpos( $cell, "id='")) || (0 === strpos( $cell, 'id="')) || ((0 === strpos( $cell, 'id=')) && ('*' == substr( $cell, -1)))) {
 				unset( $cols[$i]);
 				$cols = array_values( $cols);
 				--$i;
@@ -197,6 +203,9 @@
 			if( strlen( getLinkText( $name)) > 0) {
 				$name = getLinkText( $name);
 			}
+			if( '(*)' == substr( $name, -3)) {
+				$name = trim( substr( $name, 0, -3));
+			}
 			return $name;
 		}
 
@@ -306,12 +315,12 @@
 	foreach( $districts as $district) {
 		$cells = explodeWikipediaTableRow( $district);
 		$link = getLinkSite( $cells[0]);
-		echo $link.'<br>';
+		echo '<br>'.$link.'<br><br>';
 
 		$data = getDistrictData( $link);
-		echo json_encode( $data, JSON_UNESCAPED_UNICODE);
+//		echo json_encode( $data, JSON_UNESCAPED_UNICODE);
 
-		break;
+//		break;
 	}
 
 //	$data = getDistrictData( 'Liste_der_Straßen_und_Plätze_in_Berlin-Friedrichshain');
