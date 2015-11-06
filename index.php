@@ -310,6 +310,7 @@
 			   (( 0 === strpos( $cells[0], '[[Prenzlauer Tor]]')) && (count( $cells) == 6)) ||
 			   (( 0 === strpos( $cells[0], 'Kirchdorfer Straße')) && (count( $cells) == 5)) ||
 			   (( 0 === strpos( $cells[0], 'Patersdorfer Straße')) && (count( $cells) == 5)) ||
+			   (( 0 === strpos( $cells[0], 'Fred-Löwenberg-Platz')) && (count( $cells) == 5)) ||
 			   (( 0 === strpos( $cells[0], 'Fromet-und-Moses-Mendelssohn-Platz')) && (count( $cells) == 5))) {
 				// length cell is missing
 				if( 7 == $colCount) {
@@ -335,8 +336,9 @@
 				$cells[4] = $cells[3];
 				$cells[3] = $cells[2];
 				$cells[2] = '';
-			} else if((( 0 === strpos( $cells[0], 'Tiergartenufer')) && (count( $cells) == 5))) {
-				// data cell is empty
+			} else if((( 0 === strpos( $cells[0], 'Eosanderplatz')) && (count( $cells) == 5)) ||
+			          (( 0 === strpos( $cells[0], 'Tiergartenufer')) && (count( $cells) == 5))) {
+				// date cell is empty
 				$cells[] = $cells[4];
 				$cells[4] = $cells[3];
 				$cells[3] = '';
@@ -359,6 +361,7 @@
 				$cells[1] = '0';
 			} else if((( 0 === strpos( $cells[0], 'Lennéplatz')) && (count( $cells) == 4)) ||
 			          (( 0 === strpos( $cells[0], 'Prinzengasse')) && (count( $cells) == 5)) ||
+			          (( 0 === strpos( $cells[0], 'Teichrohrplatz')) && (count( $cells) == 4)) ||
 			          (( 0 === strpos( $cells[0], 'Stadtbahnbogen')) && (count( $cells) == 5)) ||
 			          (( 0 === strpos( $cells[0], 'Rosa-Parks-Platz')) && (count( $cells) == 5)) ||
 			          (( 0 === strpos( $cells[0], 'Lilienthalstraße')) && (count( $cells) == 8)) ||
@@ -379,7 +382,8 @@
 
 		$data = array();
 		$data['title'] = getStreetName( $cells);
-		$data['gps'] = getStreetCenter( $cells);
+		$data['lat'] = getStreetCenter( $cells)['lat'];
+		$data['lng'] = getStreetCenter( $cells)['lng'];
 		$data['date'] = getStreetDate( $cells);
 		$data['link'] = getLinkSite( getStreetOrigin( $cells));
 
